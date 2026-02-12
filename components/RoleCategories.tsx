@@ -8,7 +8,7 @@ const RoleCategories: React.FC = () => {
   };
 
   const roles = [
-    { name: 'Marketing', icon: '📢', color: 'text-blue-500' },
+    { name: 'Digital Marketing', icon: '📢', color: 'text-blue-500' },
     { name: 'HR & Admin', icon: '👥', color: 'text-blue-600' },
     { name: 'Creative & Design', icon: '🎨', color: 'text-pink-500' },
     { name: 'Accounting & Finance', icon: '📋', color: 'text-orange-600' },
