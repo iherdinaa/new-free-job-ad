@@ -9,7 +9,12 @@ interface SuccessModalProps {
 }
 
 const SuccessModal: React.FC<SuccessModalProps> = ({ onClose, formData }) => {
+  const [loginClicked, setLoginClicked] = React.useState(false);
+  const [registerClicked, setRegisterClicked] = React.useState(false);
+
   const handleLoginClick = async () => {
+    if (loginClicked) return;
+    setLoginClicked(true);
     await trackButtonClick(
       formData.companyName,
       formData.companyEmail,
@@ -20,6 +25,8 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ onClose, formData }) => {
   };
 
   const handleRegisterClick = async () => {
+    if (registerClicked) return;
+    setRegisterClicked(true);
     await trackButtonClick(
       formData.companyName,
       formData.companyEmail,
@@ -69,11 +76,15 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ onClose, formData }) => {
             <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100">
               <p className="text-slate-900 font-bold mb-3 text-base">Already have an account on AJobThing?</p>
               <a 
-                href="https://epca.in/ajt-freeja-login" 
-                target="_blank" 
-                rel="noopener noreferrer"
+                href={loginClicked ? undefined : "https://epca.in/ajt-freeja-login"}
+                target={loginClicked ? undefined : "_blank"}
+                rel={loginClicked ? undefined : "noopener noreferrer"}
                 onClick={handleLoginClick}
-                className="inline-block w-full py-3 bg-blue-600 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all shadow-md shadow-blue-100 mb-2"
+                className={`inline-block w-full py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-md mb-2 ${
+                  loginClicked 
+                    ? 'bg-gray-400 text-gray-200 cursor-not-allowed shadow-none' 
+                    : 'bg-blue-600 text-white hover:bg-blue-700 shadow-blue-100 cursor-pointer'
+                }`}
               >
                 Login and Claim
               </a>
@@ -86,11 +97,15 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ onClose, formData }) => {
             <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100">
               <p className="text-slate-900 font-bold mb-3 text-base">Don’t have an account yet?</p>
               <a 
-                href="https://epca.in/ajt-freeja-reg" 
-                target="_blank" 
-                rel="noopener noreferrer"
+                href={registerClicked ? undefined : "https://epca.in/ajt-freeja-reg"}
+                target={registerClicked ? undefined : "_blank"}
+                rel={registerClicked ? undefined : "noopener noreferrer"}
                 onClick={handleRegisterClick}
-                className="inline-block w-full py-3 bg-[#0F172A] text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-slate-800 transition-all shadow-md shadow-slate-100 mb-2"
+                className={`inline-block w-full py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-md mb-2 ${
+                  registerClicked 
+                    ? 'bg-gray-400 text-gray-200 cursor-not-allowed shadow-none' 
+                    : 'bg-[#0F172A] text-white hover:bg-slate-800 shadow-slate-100 cursor-pointer'
+                }`}
               >
                 Register and Claim
               </a>

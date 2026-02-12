@@ -15,6 +15,7 @@ const JobForm: React.FC<JobFormProps> = ({ onSuccess }) => {
     hiringPreference: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submittedEmails, setSubmittedEmails] = useState<Set<string>>(new Set());
 
   const hiringOptions = [
     "Yes, I'm hiring interns & full timers",
@@ -33,6 +34,13 @@ const JobForm: React.FC<JobFormProps> = ({ onSuccess }) => {
       alert("Please select your hiring preference.");
       return;
     }
+    
+    // Check for duplicate email
+    if (submittedEmails.has(formData.companyEmail)) {
+      alert("This email has already been submitted. Please use a different email address.");
+      return;
+    }
+    
     setIsSubmitting(true);
     
     // Track form submission to Google Sheets
@@ -45,6 +53,8 @@ const JobForm: React.FC<JobFormProps> = ({ onSuccess }) => {
     
     setTimeout(() => {
       setIsSubmitting(false);
+      // Add email to submitted set
+      setSubmittedEmails(prev => new Set(prev).add(formData.companyEmail));
       onSuccess(formData);
       setFormData({
         companyName: '',
@@ -163,7 +173,7 @@ const JobForm: React.FC<JobFormProps> = ({ onSuccess }) => {
               : 'bg-[#F59E0B] hover:bg-[#E68A00] text-white shadow-amber-100'
           }`}
         >
-          {isSubmitting ? 'Posting...' : 'Submit & Post for FREE'}
+          {isSubmitting ? 'Loading...' : 'Submit & Post for FREE'}
         </button>
       </form>
     </div>
