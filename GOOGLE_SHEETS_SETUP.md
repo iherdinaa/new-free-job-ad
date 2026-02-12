@@ -16,6 +16,7 @@ function doPost(e) {
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('FreeJobAd');
     
     // Get form data
+    const action = e.parameter.action || 'submit';
     const timestamp = e.parameter.timestamp || new Date().toISOString();
     const companyName = e.parameter.company_name || '';
     const email = e.parameter.email || '';
@@ -24,16 +25,36 @@ function doPost(e) {
     const clickLogin = e.parameter.click_login || '';
     const clickRegister = e.parameter.click_register || '';
     
-    // Append data to sheet
-    sheet.appendRow([
-      timestamp,
-      companyName,
-      email,
-      phoneNumber,
-      hiringStatus,
-      clickLogin,
-      clickRegister
-    ]);
+    if (action === 'submit') {
+      // Create new row for form submission
+      sheet.appendRow([
+        timestamp,
+        companyName,
+        email,
+        phoneNumber,
+        hiringStatus,
+        '', // click_login - empty initially
+        ''  // click_register - empty initially
+      ]);
+    } else if (action === 'update') {
+      // Find row with matching email and update click columns
+      const data = sheet.getDataRange().getValues();
+      
+      // Start from row 2 (skip header)
+      for (let i = 1; i < data.length; i++) {
+        if (data[i][2] === email) { // Column C (index 2) is email
+          // Update the click_login column (F, index 5)
+          if (clickLogin === 'yes') {
+            sheet.getRange(i + 1, 6).setValue('yes');
+          }
+          // Update the click_register column (G, index 6)
+          if (clickRegister === 'yes') {
+            sheet.getRange(i + 1, 7).setValue('yes');
+          }
+          break; // Update only the first matching row
+        }
+      }
+    }
     
     return ContentService.createTextOutput(JSON.stringify({
       status: 'success',
@@ -91,19 +112,21 @@ timestamp | company_name | email | phone_number | hiring_status | click_login | 
 1. Submit the form on your website
 2. Check your Google Sheet - you should see a new row with the submission data
 3. Click the Login or Register buttons in the success modal
-4. Check your Google Sheet - you should see additional rows tracking the button clicks
+4. Check your Google Sheet - the same row should be updated with "yes" in the appropriate click column
 
 ## Data Structure
 
 Each row in your Google Sheet will contain:
 
-- **timestamp**: ISO 8601 date/time of the event
+- **timestamp**: ISO 8601 date/time when the form was submitted
 - **company_name**: Company name from the form
-- **email**: Email address from the form
+- **email**: Email address from the form (used as unique identifier)
 - **phone_number**: Phone number with country code (+60)
 - **hiring_status**: Selected hiring preference
-- **click_login**: "yes" if login button was clicked, "no" otherwise
-- **click_register**: "yes" if register button was clicked, "no" otherwise
+- **click_login**: "yes" if login button was clicked, empty otherwise
+- **click_register**: "yes" if register button was clicked, empty otherwise
+
+**Note**: When a user clicks Login or Register, the system finds the row with their email and updates the appropriate column in that same row, rather than creating a new row.
 
 ## Troubleshooting
 

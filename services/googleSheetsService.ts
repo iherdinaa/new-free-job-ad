@@ -10,12 +10,13 @@ interface SheetData {
 
 const SPREADSHEET_ID = '1vV14LKZUEdVCYxcdoZgvJ7bXvK7picvC6K4yKM2Pdug';
 
-export const sendToGoogleSheets = async (data: SheetData): Promise<boolean> => {
+export const sendToGoogleSheets = async (data: SheetData, action: 'submit' | 'update' = 'submit'): Promise<boolean> => {
   try {
     // Use Google Sheets API via Apps Script Web App or direct API
     // For now, we'll use a Web App deployment from Google Apps Script
     
     const formData = new FormData();
+    formData.append('action', action);
     formData.append('timestamp', data.timestamp);
     formData.append('company_name', data.company_name);
     formData.append('email', data.email);
@@ -83,9 +84,10 @@ export const trackButtonClick = async (
     email: email,
     phone_number: phoneNumber,
     hiring_status: hiringStatus,
-    click_login: buttonType === 'login' ? 'yes' : 'no',
-    click_register: buttonType === 'register' ? 'yes' : 'no',
+    click_login: buttonType === 'login' ? 'yes' : '',
+    click_register: buttonType === 'register' ? 'yes' : '',
   };
 
-  await sendToGoogleSheets(data);
+  // Send with 'update' action to update existing row
+  await sendToGoogleSheets(data, 'update');
 };
