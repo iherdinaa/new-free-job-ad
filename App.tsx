@@ -9,9 +9,11 @@ import RoleCategories from './components/RoleCategories';
 import UniversityPartners from './components/UniversityPartners';
 import FAQ from './components/FAQ';
 import SuccessModal from './components/SuccessModal';
+import { JobFormData } from './types';
 
 const App: React.FC = () => {
   const [showSuccess, setShowSuccess] = useState(false);
+  const [submittedFormData, setSubmittedFormData] = useState<JobFormData | null>(null);
 
   return (
     <div className="min-h-screen bg-white selection:bg-blue-100 selection:text-blue-900">
@@ -32,7 +34,10 @@ const App: React.FC = () => {
               {/* Left Column: Form - Clean & High */}
               <div className="lg:col-span-5 order-2 lg:order-1 lg:mt-2">
                 <div className="relative">
-                  <JobForm onSuccess={() => setShowSuccess(true)} />
+                  <JobForm onSuccess={(formData) => {
+                    setSubmittedFormData(formData);
+                    setShowSuccess(true);
+                  }} />
                 </div>
               </div>
 
@@ -106,7 +111,12 @@ const App: React.FC = () => {
         </footer>
       </main>
 
-      {showSuccess && <SuccessModal onClose={() => setShowSuccess(false)} />}
+      {showSuccess && submittedFormData && (
+        <SuccessModal 
+          onClose={() => setShowSuccess(false)} 
+          formData={submittedFormData}
+        />
+      )}
       
       <style>{`
         @keyframes bounce-subtle {

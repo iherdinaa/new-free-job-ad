@@ -1,11 +1,34 @@
 
 import React from 'react';
+import { JobFormData } from '../types';
+import { trackButtonClick } from '../services/googleSheetsService';
 
 interface SuccessModalProps {
   onClose: () => void;
+  formData: JobFormData;
 }
 
-const SuccessModal: React.FC<SuccessModalProps> = ({ onClose }) => {
+const SuccessModal: React.FC<SuccessModalProps> = ({ onClose, formData }) => {
+  const handleLoginClick = async () => {
+    await trackButtonClick(
+      formData.companyName,
+      formData.companyEmail,
+      `+60${formData.whatsapp}`,
+      formData.hiringPreference,
+      'login'
+    );
+  };
+
+  const handleRegisterClick = async () => {
+    await trackButtonClick(
+      formData.companyName,
+      formData.companyEmail,
+      `+60${formData.whatsapp}`,
+      formData.hiringPreference,
+      'register'
+    );
+  };
+
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-6 overflow-hidden">
       {/* Backdrop */}
@@ -49,6 +72,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ onClose }) => {
                 href="https://epca.in/ajt-freeja-login" 
                 target="_blank" 
                 rel="noopener noreferrer"
+                onClick={handleLoginClick}
                 className="inline-block w-full py-3 bg-blue-600 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-blue-700 transition-all shadow-md shadow-blue-100 mb-2"
               >
                 Login and Claim
@@ -65,6 +89,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ onClose }) => {
                 href="https://epca.in/ajt-freeja-reg" 
                 target="_blank" 
                 rel="noopener noreferrer"
+                onClick={handleRegisterClick}
                 className="inline-block w-full py-3 bg-[#0F172A] text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-slate-800 transition-all shadow-md shadow-slate-100 mb-2"
               >
                 Register and Claim

@@ -1,9 +1,10 @@
 
 import React, { useState } from 'react';
 import { JobFormData } from '../types';
+import { trackFormSubmission } from '../services/googleSheetsService';
 
 interface JobFormProps {
-  onSuccess: () => void;
+  onSuccess: (formData: JobFormData) => void;
 }
 
 const JobForm: React.FC<JobFormProps> = ({ onSuccess }) => {
@@ -26,16 +27,25 @@ const JobForm: React.FC<JobFormProps> = ({ onSuccess }) => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.hiringPreference) {
       alert("Please select your hiring preference.");
       return;
     }
     setIsSubmitting(true);
+    
+    // Track form submission to Google Sheets
+    await trackFormSubmission(
+      formData.companyName,
+      formData.companyEmail,
+      `+60${formData.whatsapp}`,
+      formData.hiringPreference
+    );
+    
     setTimeout(() => {
       setIsSubmitting(false);
-      onSuccess();
+      onSuccess(formData);
       setFormData({
         companyName: '',
         companyEmail: '',
