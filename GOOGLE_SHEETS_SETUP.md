@@ -13,7 +13,7 @@ This guide will help you connect your form to Google Sheets to track submissions
 ```javascript
 function doPost(e) {
   try {
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('FreeJobAd');
     
     // Get form data
     const timestamp = e.parameter.timestamp || new Date().toISOString();

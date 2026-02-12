@@ -60,7 +60,7 @@ const JobForm: React.FC<JobFormProps> = ({ onSuccess }) => {
       {/* Form Header */}
       <div className="text-center mb-8">
         <div className="inline-block px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-[9px] font-black uppercase tracking-[0.2em] mb-3">
-          Free Forever
+          Internship
         </div>
         <h3 className="text-3xl font-black text-slate-900 tracking-tight mb-2">Post Your Job</h3>
         <p className="text-slate-400 font-medium text-xs">Reach 15,000+ candidates instantly</p>

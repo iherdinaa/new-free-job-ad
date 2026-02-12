@@ -26,7 +26,7 @@ const Hero: React.FC = () => {
       <div className="flex flex-wrap gap-3 w-full">
         {[
           { 
-            label: 'Unlimited Free Postings', 
+            label: '100% Free Internship Job Posting', 
             icon: '✨', 
             bgColor: 'bg-blue-600', 
             textColor: 'text-white'
